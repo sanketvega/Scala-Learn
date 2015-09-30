@@ -51,6 +51,14 @@ sealed abstract class FList[+A] {
     Nil
   }
   
+  def map[B](f: A => B): FList[B] = {
+    Nil
+  }
+  
+  def size(): Int = {
+    length
+  }
+  
    override def toString: String = {
     def loop(h: A, t: FList[A], s: String): String = 
       if (!t.isEmpty) loop(t.head, t.tail, s + h + ", ")
