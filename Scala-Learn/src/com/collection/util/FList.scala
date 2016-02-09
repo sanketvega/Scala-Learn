@@ -12,96 +12,75 @@ sealed abstract class FList[+A] {
   
   def fail(m: String) = throw new NoSuchElementException(m)
   
-  def apply(index: Int): A = {
-    if(isEmpty)
-      fail("")
-    else if(index < 0)
-      fail("")
-    else if(index == 0)
-      head
-    else
-      tail(index - 1)
-  }
-  
   def prepend[B >: A](item: B): FList[B] = FList.make(item, this)
   
-  def append[B >: A](item: B): FList[B] = if(isEmpty) FList.make(item, Nil) else FList.make(this.head, this.tail.append(item)) 
+  def append[B >: A](item: B): FList[B] = if(isEmpty) FList.make(item, Nil) else FList.make(this.head, this.tail.append(item))
   
-  def reverse(): FList[A] = {
+  def length: Int = {
     @tailrec
-    def reverseTail(list: FList[A], acc: FList[A]): FList[A] = {
-      if(list.isEmpty)
-        acc
-      else
-        reverseTail(list.tail, acc.prepend(list.head))
-    }
-    reverseTail(this, Nil)
-  }
-  
-  def length(): Int = {
-    @tailrec
-    def tailLength(list: FList[A], acc: Int): Int =  list match{
+    def tailLength[A](list: FList[A], acc: Int): Int = list match{
       case Cons(head, tail) => tailLength(tail, acc + 1)
       case Nil => acc
     }
     tailLength(this, 0)
   }
   
-  def foldLeft[B](z: B)(f: (B, A) => B): FList[B] = {
-    Nil
+  def reverse: FList[A] = {
+    @tailrec
+    def tailReverse[A](list: FList[A], acc: FList[A]): FList[A] = list match {
+      case Cons(head, tail) => tailReverse(tail, acc.prepend(head))
+      case Nil => acc
+    }
+    tailReverse(this, FList.empty[A])
   }
   
-  def map[B](f: A => B): FList[B] = {
-    Nil
+  def apply(index: Int): A = {
+    if(isEmpty) 
+      fail("Index Out of Bound Exception")
+    else if(index == 0) head
+    else tail(index-1)
   }
   
-  def size(): Int = {
-    length
+  def concat[B >: A](list: FList[B]): FList[B] = {
+    if(isEmpty)
+      list
+    else{
+      tail.concat(list).prepend(head)
+    }
   }
-  
-   override def toString: String = {
-    def loop(h: A, t: FList[A], s: String): String = 
-      if (!t.isEmpty) loop(t.head, t.tail, s + h + ", ")
-      else s + h
-
-    if (isEmpty) "FList()"
-    else "FList[" + loop(head, tail, "") + "]"
-  }
-  
 }
 
-case object Nil extends FList[Nothing]{
+case object Nil extends FList[Nothing] {
   
-  def head = fail("Empty List")
+  def head = fail("Head is Empty")
   
-  def tail = fail("Empty List")
+  def tail = fail("Tail is Empty")
   
   def isEmpty = true
 }
 
-case class Cons[A](head: A, tail: FList[A]) extends FList[A]{
+final case class Cons[A](head: A, tail: FList[A]) extends FList[A] {
   
   def isEmpty = false
-  
 }
 
-object FList{
+object FList {
   
   def make[A](head: A, tail: FList[A]) = Cons(head, tail)
   
-  def empty[A]: FList[A] = Nil
+  def empty[A]:FList[A] = Nil
   
   def apply[A](items: A*): FList[A] = {
     if(items.isEmpty)
       empty
     else{
-       var list: FList[A] = FList.empty
-       var index = items.length - 1
-       while(index >=0 ){    	   
-    	   list = list.prepend(items(index))
-    	   index -= 1
-       }
-       list
-    }   
-  }
+      var emptyList: FList[A] = FList.empty
+      var lastIndex = items.length - 1
+      while(lastIndex >= 0){
+        emptyList = emptyList.prepend(items(lastIndex))
+        lastIndex -= 1
+      }
+      emptyList
+    }
+  }    
 }
