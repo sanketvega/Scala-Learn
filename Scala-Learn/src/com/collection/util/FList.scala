@@ -118,13 +118,13 @@ sealed abstract class FList[+A] {
   }
   
   def drop(n: Int): FList[A] = {
-    if(isEmpty || n <= 0) Nil
-    else if(n > this.length) FList.empty[A]
-    else{
-      var list = FList.empty[A]      
-      //TODO
-      list
+    var these = this
+    var count = n
+    while (!these.isEmpty && count > 0) {
+      these = these.tail
+      count -= 1
     }
+    these
   }
   
   def iterator(): Iterator[A] =  new FListIterator(this)
