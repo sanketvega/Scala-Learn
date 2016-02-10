@@ -48,6 +48,97 @@ sealed abstract class FList[+A] {
       tail.concat(list).prepend(head)
     }
   }
+  
+  def map[B](f: A => B): FList[B] = {
+    @tailrec
+    def tailMap(list: FList[A], acc: FList[B]): FList[B] = list match {
+      case Cons(head, tail) => tailMap(tail, acc.append(f(head)))
+      case Nil => acc      
+    }
+    tailMap(this, FList.empty[B])
+  }
+  
+  @tailrec
+  def forEach(f: A => Unit): Unit = {
+    if(!isEmpty){
+      f(head)
+      tail.forEach(f)
+    }
+  }
+  
+  def filter(f: A => Boolean): FList[A] = {
+    @tailrec
+    def tailFilter(list: FList[A], acc: FList[A]): FList[A] = list match {
+      case Cons(head, tail) => tailFilter(tail, if(f(head)) acc.append(head) else acc)
+      case Nil => acc
+    }
+    tailFilter(this, FList.empty[A])
+  }
+  
+  def foldLeft[B](z: B)(op: (B, A) => B): B = {
+    @tailrec
+    def tailFold(list: FList[A], acc: B): B = list match{
+      case Nil => acc
+      case Cons(head, tail) => tailFold(tail, op(acc, head))      
+    }
+    tailFold(this, z)
+  }
+  
+  def foldRight[B](z: B)(op: (A, B) => B): B = {
+    reverse.foldLeft(z)((right, left) => op(left, right))    
+  }
+  
+  def reduceLeft[B >: A](op: (B, A) => B): B = {
+    if(isEmpty)
+      fail("Nil.reduceLeft")
+    else 
+      tail.foldLeft[B](head)(op)
+  }
+  
+  def reduceRight[B >: A](op: (A, B) => B): B = {
+    if(isEmpty)
+        fail("Nil.reduceRight")
+    else if(tail.isEmpty) head
+    else op(head, tail.reduceRight(op))
+  }
+  
+  def take(n: Int): FList[A] = {
+    if(isEmpty || n <= 0) Nil
+    else if(n > this.length)
+      this 
+    else {      
+      var list = FList.empty[A]
+      var index = 0
+      while(index < n){
+        list = list.append(this(index))
+        index += 1
+      }
+      list
+    }
+  }
+  
+  def drop(n: Int): FList[A] = {
+    if(isEmpty || n <= 0) Nil
+    else if(n > this.length) FList.empty[A]
+    else{
+      var list = FList.empty[A]      
+      //TODO
+      list
+    }
+  }
+  
+  def iterator(): Iterator[A] =  new FListIterator(this)
+  
+  override def toString() ={
+    val builder = new StringBuilder("[ ");
+    var index = 0
+    while(index < this.length){
+      builder.append(this(index)).append(",")
+      index += 1
+    }
+    builder.deleteCharAt(builder.length - 1).append(" ]")
+    builder.toString()
+  }
 }
 
 case object Nil extends FList[Nothing] {
@@ -62,6 +153,19 @@ case object Nil extends FList[Nothing] {
 final case class Cons[A](head: A, tail: FList[A]) extends FList[A] {
   
   def isEmpty = false
+}
+
+final case class FListIterator[A](list: FList[A]) extends Iterator[A] {
+   
+  private[this] var index = 0
+  
+  override def hasNext = index < list.length
+  
+  override def next: A = {
+    val currentIndex = index
+    index += 1
+    list(currentIndex)
+  }  
 }
 
 object FList {
