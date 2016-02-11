@@ -127,6 +127,12 @@ sealed abstract class FList[+A] {
     these
   }
   
+  def init(): FList[A] = this match{
+    case Cons(value, Nil) => Nil
+    case Cons(head, tail) => Cons(head, tail.init())
+    case Nil => Nil
+  }
+  
   def iterator(): Iterator[A] =  new FListIterator(this)
   
   override def toString() ={
