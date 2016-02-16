@@ -2,6 +2,8 @@ package com.collection.test
 
 import com.collection.util.FList
 import scala.annotation.tailrec
+import com.collection.util.Nil
+import com.collection.util.Cons
 
 object CollectionTest extends App{
   
@@ -18,17 +20,18 @@ object CollectionTest extends App{
   val eList = List[Int](1,2,3,4,5)
   println(eList.drop(3))
   
+  def sum(ints: FList[Int]): Int = ints match {
+    case Nil => 0
+    case Cons(x,xs) => x + sum(xs)
+}
   
-  def findFirst[A](array: Array[A], f: A => Boolean): Int = {
-  	@tailrec
-  	def loop(n: Int): Int = {
-  		if( n >= array.length) -1
-  		else if( f(array(n)) ) n
-  		else loop(n - 1)
-  	}
-  	loop(array.length - 1)
-  } 
+  val x = FList(1,2,3,4,5) match {    
+    case Cons(x, Cons(2, Cons(4, _))) => x
+		case Nil => 42
+		case Cons(x, Cons(y, Cons(3, Cons(4, _)))) => x + y
+		case Cons(h, t) => h + sum(t)
+		case _ => 101
+	}
   
-  val a = findFirst(Array[Int](1,2,3,4,5,6,2,23,1), (x: Int) => x == 3)
-  print(a)
+  println(x)
 }

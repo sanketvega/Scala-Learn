@@ -147,7 +147,7 @@ sealed abstract class FList[+A] {
   }
 }
 
-case object Nil extends FList[Nothing] {
+final case object Nil extends FList[Nothing] {
   
   def head = fail("Head is Empty")
   
