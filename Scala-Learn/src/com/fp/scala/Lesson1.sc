@@ -49,4 +49,17 @@ object Lesson1 {
  
  	findFirst(Array[Int](1,2,3,4,5,6,2,23,1), (x: Int) => x == 3)
                                                   //> res2: Int = 2
+
+	def isSorted[A](array: Array[A], ordered: (A, A) => Boolean): Boolean = {
+		def loop(n: Int): Boolean = {
+			if( n >= array.length-1) true
+			else if( ordered(array(n), array(n+1))) false
+			else loop(n+1)
+			
+		}
+		loop(0)
+	}                                         //> isSorted: [A](array: Array[A], ordered: (A, A) => Boolean)Boolean
+	
+	isSorted(Array[Int](1,2,3,4,5), (x: Int, y: Int) => x > y)
+                                                  //> res3: Boolean = true
 }
