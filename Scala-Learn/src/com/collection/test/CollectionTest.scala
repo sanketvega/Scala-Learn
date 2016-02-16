@@ -18,4 +18,17 @@ object CollectionTest extends App{
   val eList = List[Int](1,2,3,4,5)
   println(eList.drop(3))
   
+  
+  def findFirst[A](array: Array[A], f: A => Boolean): Int = {
+  	@tailrec
+  	def loop(n: Int): Int = {
+  		if( n >= array.length) -1
+  		else if( f(array(n)) ) n
+  		else loop(n - 1)
+  	}
+  	loop(array.length - 1)
+  } 
+  
+  val a = findFirst(Array[Int](1,2,3,4,5,6,2,23,1), (x: Int) => x == 3)
+  print(a)
 }
