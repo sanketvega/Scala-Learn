@@ -27,7 +27,7 @@ object Lesson2 {
   //Drop While Function
   def dropWhile[A](list: List[A], f: A => Boolean): List[A] = list match{
   	case x :: xs => if(f(x)) dropWhile(xs, f) else list
-  	case Nil => Nil
+  	case _ => list
   }                                               //> dropWhile: [A](list: List[A], f: A => Boolean)List[A]
   
   dropWhile(list, (x: Int) => x != 3)             //> res2: List[Int] = List(3, 4, 5, 6, 7, 8, 23, 10)
@@ -61,4 +61,61 @@ object Lesson2 {
   
   init(list)                                      //> res5: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 23)
   
+  def foldLeft[A, B](list: List[A])(z: B)(op: (B, A) => B): B = {
+  	def tailFold(list: List[A], acc: B): B = list match{
+  		case head :: tail => tailFold(tail, op(acc, head))
+  		case Nil => acc
+  	}
+  	tailFold(list, z)
+  }                                               //> foldLeft: [A, B](list: List[A])(z: B)(op: (B, A) => B)B
+  
+  foldLeft(list)(0)(_+_)                          //> res6: Int = 69
+  
+  
+  def foldRight[A, B](list: List[A])(z : B)(op: (A, B) => B): B = {
+  	foldLeft(list.reverse)(z)((right, left) => op(left, right))
+  }                                               //> foldRight: [A, B](list: List[A])(z: B)(op: (A, B) => B)B
+  
+  foldRight(list)(0)(_+_)                         //> res7: Int = 69
+  
+  def length[A](list: List[A]): Int = foldLeft(list)(0)((x: Int, y: A) => x + 1)
+                                                  //> length: [A](list: List[A])Int
+  
+  length(list)                                    //> res8: Int = 10
+
+	def sum(list: List[Int]): Int = foldLeft(list)(0)(_+_)
+                                                  //> sum: (list: List[Int])Int
+	
+	sum(list)                                 //> res9: Int = 69
+	
+	def product(list: List[Int]): Double = foldLeft(list)(1)(_*_)
+                                                  //> product: (list: List[Int])Double
+	product(list)                             //> res10: Double = 9273600.0
+	
+	
+	def map[A, B](list: List[A], f: A => B): List[B] = {
+		def tailMap(acc: List[B], list: List[A]): List[B] = list match {
+			case head :: tail => tailMap(acc ::: List(f(head)), tail)
+			case Nil => acc
+		}
+		tailMap(List.empty[B], list)
+	}                                         //> map: [A, B](list: List[A], f: A => B)List[B]
+	
+	map(list, (x: Int) => x + 1)              //> res11: List[Int] = List(2, 3, 4, 5, 6, 7, 8, 9, 24, 11)
+	
+	val doubleList: List[Double] = List(1.0,2.0,3.0)
+                                                  //> doubleList  : List[Double] = List(1.0, 2.0, 3.0)
+	
+	map(doubleList, (x: Double) => String.valueOf(x))
+                                                  //> res12: List[String] = List(1.0, 2.0, 3.0)
+	def filter[A](list: List[A], f: A => Boolean): List[A] = {
+	
+		def tailFilter(acc: List[A], list: List[A]): List[A] = list match{
+			case head :: tail => if(f(head)) tailFilter(acc ::: List(head), tail) else tailFilter(acc, tail)
+			case Nil => acc
+		}
+		tailFilter(List.empty, list)
+	}                                         //> filter: [A](list: List[A], f: A => Boolean)List[A]
+	
+	filter(list, (x: Int) => x > 7)           //> res13: List[Int] = List(8, 23, 10)
 }
