@@ -61,6 +61,7 @@ object Lesson2 {
   
   init(list)                                      //> res5: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 23)
   
+  //Create a foldLeft method
   def foldLeft[A, B](list: List[A])(z: B)(op: (B, A) => B): B = {
   	def tailFold(list: List[A], acc: B): B = list match{
   		case head :: tail => tailFold(tail, op(acc, head))
@@ -71,28 +72,30 @@ object Lesson2 {
   
   foldLeft(list)(0)(_+_)                          //> res6: Int = 69
   
-  
+  //Create a foldRight method
   def foldRight[A, B](list: List[A])(z : B)(op: (A, B) => B): B = {
   	foldLeft(list.reverse)(z)((right, left) => op(left, right))
   }                                               //> foldRight: [A, B](list: List[A])(z: B)(op: (A, B) => B)B
   
   foldRight(list)(0)(_+_)                         //> res7: Int = 69
   
+  //Compute length using foldLeft method
   def length[A](list: List[A]): Int = foldLeft(list)(0)((x: Int, y: A) => x + 1)
                                                   //> length: [A](list: List[A])Int
   
   length(list)                                    //> res8: Int = 10
 
+	//Compute sum using foldLeft method
 	def sum(list: List[Int]): Int = foldLeft(list)(0)(_+_)
                                                   //> sum: (list: List[Int])Int
 	
 	sum(list)                                 //> res9: Int = 69
-	
+	////Compute product using foldLeft method
 	def product(list: List[Int]): Double = foldLeft(list)(1)(_*_)
                                                   //> product: (list: List[Int])Double
 	product(list)                             //> res10: Double = 9273600.0
 	
-	
+	//Implement map method
 	def map[A, B](list: List[A], f: A => B): List[B] = {
 		def tailMap(acc: List[B], list: List[A]): List[B] = list match {
 			case head :: tail => tailMap(acc ::: List(f(head)), tail)
@@ -108,6 +111,7 @@ object Lesson2 {
 	
 	map(doubleList, (x: Double) => String.valueOf(x))
                                                   //> res12: List[String] = List(1.0, 2.0, 3.0)
+	//Create a filter method
 	def filter[A](list: List[A], f: A => Boolean): List[A] = {
 	
 		def tailFilter(acc: List[A], list: List[A]): List[A] = list match{
@@ -118,4 +122,16 @@ object Lesson2 {
 	}                                         //> filter: [A](list: List[A], f: A => Boolean)List[A]
 	
 	filter(list, (x: Int) => x > 7)           //> res13: List[Int] = List(8, 23, 10)
+	
+	//Implement list reverse method using foldLeft
+	foldLeft(list)(List.empty[Int])((x : List[Int], y: Int) => y :: x)
+                                                  //> res14: List[Int] = List(10, 23, 8, 7, 6, 5, 4, 3, 2, 1)
+
+	def appendWithFoldLeft[A](list: List[A], appendList: List[A]): List[A] = foldLeft(appendList)(list)((x: List[A], y : A) => x ::: List(y))
+                                                  //> appendWithFoldLeft: [A](list: List[A], appendList: List[A])List[A]
+
+	val appList = List(100,200,300,400,500)   //> appList  : List[Int] = List(100, 200, 300, 400, 500)
+	
+	appendWithFoldLeft(list, appList)         //> res15: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 23, 10, 100, 200, 300, 400,
+                                                  //|  500)
 }

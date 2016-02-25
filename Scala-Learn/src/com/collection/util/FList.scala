@@ -2,7 +2,7 @@ package com.collection.util
 
 import scala.annotation.tailrec
 
-sealed abstract class FList[+A] {
+sealed abstract class FList[@specialized(Int, Float, Double, Char, Long, Short) +A] {
 
   def head: A
   
@@ -27,7 +27,7 @@ sealed abstract class FList[+A] {
   
   def reverse: FList[A] = {
     @tailrec
-    def tailReverse[A](list: FList[A], acc: FList[A]): FList[A] = list match {
+    def tailReverse(list: FList[A], acc: FList[A]): FList[A] = list match {
       case Cons(head, tail) => tailReverse(tail, acc.prepend(head))
       case Nil => acc
     }
