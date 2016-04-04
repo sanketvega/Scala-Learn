@@ -25,6 +25,8 @@ sealed abstract class FList[@specialized(Int, Float, Double, Char, Long, Short) 
     tailLength(this, 0)
   }
   
+  def last(): A = apply(length-1)
+  
   def reverse: FList[A] = {
     @tailrec
     def tailReverse(list: FList[A], acc: FList[A]): FList[A] = list match {
@@ -57,6 +59,16 @@ sealed abstract class FList[@specialized(Int, Float, Double, Char, Long, Short) 
     }
     tailMap(this, FList.empty[B])
   }
+  
+  def flatten[B](list: FList[FList[B]]): FList[B] = list match {
+    case Nil              => Nil
+    case Cons(head, tail) => head concat flatten(tail)
+  }
+  
+  def flatMap[B](f: A => FList[B]): FList[B] = {
+    flatten(this map f)
+  }
+
   
   @tailrec
   def forEach(f: A => Unit): Unit = {
@@ -136,13 +148,13 @@ sealed abstract class FList[@specialized(Int, Float, Double, Char, Long, Short) 
   def iterator(): Iterator[A] =  new FListIterator(this)
   
   override def toString() ={
-    val builder = new StringBuilder("[ ");
+    val builder = new StringBuilder("FList(");
     var index = 0
     while(index < this.length){
       builder.append(this(index)).append(",")
       index += 1
     }
-    builder.deleteCharAt(builder.length - 1).append(" ]")
+    builder.deleteCharAt(builder.length - 1).append(")")
     builder.toString()
   }
 }

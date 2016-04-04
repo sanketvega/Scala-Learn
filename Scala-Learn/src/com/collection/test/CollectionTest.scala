@@ -14,10 +14,12 @@ object CollectionTest extends App{
   
   println(list.map { x => x.toDouble }.foldLeft(0.0)(_+_));
   
-  var set = new HashSet[Int]()
-  set = set + 1
-  set.iterator
+  val fruits = FList[String]("apple", "banana", "orange")
   
-  val l = List(1,2,3,4,5)
-  l.iterator
+  val rs = fruits.flatMap { x => FList(x.toUpperCase()) }
+
+  println(rs)
+  
+  println(list.last())
+
 }
