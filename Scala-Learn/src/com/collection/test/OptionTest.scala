@@ -17,5 +17,10 @@ object OptionTest extends App{
   
   val list: List[Double] = List(1.0,2.0,12.0,3.0,7.0)
                                                   //> list  : List[Double] = List(1.0, 2.0, 12.0, 3.0, 7.0)
+  
 	val result = variance(list)
+	
+	val testValue: Option[Int] = Some(5)
+	
+	println(testValue.getOrElse("Invalid"))
 }
