@@ -8,7 +8,7 @@ import scala.collection.immutable.List
 object CollectionTest extends App{
   
   //val arr: Array[Int] = (1 to 5).toArray
-  val list = FList[Int](1,2,3,4,5,6,7,8,9,10) 
+  /*val list = FList[Int](1,2,3,4,5,6,7,8,9,10) 
   println(list)
   println(list.foldLeft(0)(_+_))
   
@@ -20,6 +20,10 @@ object CollectionTest extends App{
 
   println(rs)
   
-  println(list.last())
+  println(list.last())*/
+  
+  val list1 = List(1,2,3);  
+  
+  println(list1.take(1))
 
 }

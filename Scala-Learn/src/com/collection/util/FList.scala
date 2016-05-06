@@ -2,7 +2,7 @@ package com.collection.util
 
 import scala.annotation.tailrec
 
-sealed abstract class FList[@specialized(Int, Float, Double, Char, Long, Short) +A] {
+sealed abstract class FList[+A] {
 
   def head: A
   
