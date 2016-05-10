@@ -24,6 +24,8 @@ object CollectionTest extends App{
   
   val list1 = List(1,2,3);  
   
-  println(list1.take(1))
+  println(list1.iterator)
+  
+  Seq
 
 }

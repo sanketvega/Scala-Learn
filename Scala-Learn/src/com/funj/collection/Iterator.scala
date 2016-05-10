@@ -1,8 +1,11 @@
-package com.collection.util
+package com.funj.collection
 
+/**
+ * An custom Iterator class
+ * 
+ * @author kkishore
+ */
 trait Iterator[+A] {
-  
-  self =>
   
   def hasNext: Boolean
   
@@ -12,7 +15,7 @@ trait Iterator[+A] {
   
   def forEach[U](f: A => U) = { while(hasNext) { f(next) } }
   
-  def take(n: Int): Iterator[A] = {
+  /*def take(n: Int): Iterator[A] = {
     if(n > 0){
       var i = n;
       while( i > 0 && self.hasNext){
@@ -43,11 +46,7 @@ trait Iterator[+A] {
   def map[B](f: A => B): Iterator[B] = new AbstractIterator[B] {
     def hasNext = self.hasNext    
     def next = f(self.next())
-  }
+  }*/
 }
 
 abstract class AbstractIterator[+A] extends Iterator[A]
-
-object Iterator{
-  
-}
