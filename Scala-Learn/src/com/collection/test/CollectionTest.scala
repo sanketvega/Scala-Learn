@@ -1,31 +1,41 @@
 package com.collection.test
 
-import com.collection.util.FList
-import scala.collection.immutable.Set
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.List
+import com.collection.util._
+object CollectionTest extends App {
 
-object CollectionTest extends App{
-  
-  //val arr: Array[Int] = (1 to 5).toArray
-  /*val list = FList[Int](1,2,3,4,5,6,7,8,9,10) 
-  println(list)
-  println(list.foldLeft(0)(_+_))
-  
-  println(list.map { x => x.toDouble }.foldLeft(0.0)(_+_));
-  
-  val fruits = FList[String]("apple", "banana", "orange")
-  
-  val rs = fruits.flatMap { x => FList(x.toUpperCase()) }
+  val myList: FList[Int] = FList(1, 2, 3, 4, 5, 6)
 
-  println(rs)
+  val result: Int = myList match {
+    case Cons(head, tail) => head + 1
+    case Nil              => 0
+  }
   
-  println(list.last())*/
+  def reverseList(): FList[Int] = {
+
+		  def tailReverse(acc: FList[Int], list: FList[Int]): FList[Int] = list match{
+		    case Cons(head, tail) => tailReverse(acc.prepend(head), tail)
+		    case Nil => acc
+		  }
+		  tailReverse(FList.empty[Int], myList)
+  }
   
-  val list1 = List(1,2,3);  
+  def addOne(): FList[Int] = {
+ 		  def tailReverse(acc: FList[Int], list: FList[Int]): FList[Int] = list match{
+		    case Cons(head, tail) => tailReverse(acc.append(head+1), tail)
+		    case Nil => acc
+		  }
+		  tailReverse(FList.empty[Int], myList)
+  }
   
-  println(list1.iterator)
+  val addOneFun = (x: Int) => x + 1
+  var count: Int = 0
+  val res = myList.map {x => 
+    count += 1
+    count
+  }
   
-  Seq
+  println(count)
+  
+  println(addOne())
 
 }
