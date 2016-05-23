@@ -1,7 +1,6 @@
-package com.collection.util
+package com.lesson2.collection
 
 import scala.annotation.tailrec
-import com.funj.collection.Iterator
 
 sealed abstract class FList[+A] {
 

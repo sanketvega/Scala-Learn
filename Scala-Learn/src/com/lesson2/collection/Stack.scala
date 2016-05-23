@@ -1,4 +1,6 @@
-package com.collection.util
+package com.lesson2.collection
+
+
 
 final class Stack[+A](val self: FList[A]) {
   

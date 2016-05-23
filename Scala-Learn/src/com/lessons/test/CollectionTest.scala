@@ -1,6 +1,9 @@
-package com.collection.test
+package com.lessons.test
 
-import com.collection.util._
+import com.lesson3.collection.util.error._
+import com.lesson2.collection._
+
+
 object CollectionTest extends App {
 
   val myList: FList[Int] = FList(1, 2, 3, 4, 5, 6)

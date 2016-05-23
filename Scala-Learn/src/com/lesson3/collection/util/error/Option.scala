@@ -1,4 +1,4 @@
-package com.collection.util.error
+package com.lesson3.collection.util.error
 
 sealed trait Option[+A]{
   

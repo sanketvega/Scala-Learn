@@ -1,6 +1,6 @@
-package com.collection.test
+package com.lessons.test
 
-import com.collection.util.error._
+import com.lesson3.collection.util.error._
 
 object OptionTest extends App{
   

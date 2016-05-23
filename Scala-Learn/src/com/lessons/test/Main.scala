@@ -1,4 +1,4 @@
-package com.collection.test
+package com.lessons.test
 
 object Main extends App{
   
