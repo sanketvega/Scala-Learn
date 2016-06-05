@@ -14,4 +14,10 @@ object PrintDefaults {
     
   }
   
+  implicit val catPrintable = new Printable[Cat] {
+    
+    def format(value: Cat): String = value.name+" is a "+String.valueOf(value.age)+" year-old "+value.color+" cat."
+  
+  }
+  
 }
