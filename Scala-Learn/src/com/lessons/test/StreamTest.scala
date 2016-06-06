@@ -1,6 +1,6 @@
 package com.lessons.test
 
-import com.lesson3.nonstrict.Stream
+import com.lesson4.nonstrict.Stream
 
 object StreamTest extends App{
   
@@ -11,4 +11,5 @@ object StreamTest extends App{
   stream.map { x => x + 1 }
         .forEach { x => println(x) }
   
+  println(stream.takeWhile { x => x > 5 })
 }
