@@ -17,4 +17,7 @@ object Lesson4 {
   
   val forAllStream = stream.forAll { x => x % 2 == 0 }
                                                   //> forAllStream  : Boolean = false
+	val sum = stream.foldRight(0)(_+_)        //> sum  : Int = 34
+	
+	
 }

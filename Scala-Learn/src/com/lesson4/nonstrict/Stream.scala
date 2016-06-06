@@ -91,6 +91,45 @@ sealed trait Stream[+A] {
     tailLength(this, 0)
   }
   
+  def foldLeft[B](z: => B)(op: (=> B, A) => B): B = {
+    def tailFoldLeft(stream: Stream[A], acc: B): B = stream match {
+      case Cons(head, tail) => tailFoldLeft(tail(), op(acc, head()))
+      case Empty => acc
+    }
+    tailFoldLeft(this, z)
+  }
+  
+  def foldRight[B](z: => B)(f: (A,  => B) => B): B = this match{
+    case Cons(head, tail) => f(head(), tail().foldRight(z)(f))
+    case _ => z
+  }
+  
+  def foldRightTakeWhile(f: A => Boolean): Stream[A] = {
+    foldRight(Stream.empty[A]())((head, tail) => {
+      if(f(head)) Stream.cons(head, tail) else Stream.empty[A]()
+    })
+  }
+  
+  def headOption(): Option[A] = foldRight(None: Option[A])((h, _) => Some(h))
+  
+  def foldMap[B](f: A => B): Stream[B] = foldRight(Stream.empty[B]())((h, t) => {
+    Stream.cons(f(h), t)
+  })
+  
+  def foldFilter(f: A => Boolean): Stream[A] = foldRight(Stream.empty[A]())((h, t) => {
+    if(f(h)) Stream.cons(h, t) else t
+  })
+  
+  def append[B >: A](stream: => Stream[B]): Stream[B] = foldRight(stream)((h, t) => Stream.cons(h, t))
+
+  def flatMap[B](f: A => Stream[B]): Stream[B] = foldRight(Stream.empty[B]())((h, t) => f(h) append(t))
+  
+  def constant[A](value: A): Stream[A] = Stream.cons(value, constant(value))
+  
+  def from(n: Int): Stream[Int] = Stream.cons(n, from(n + 1))
+  
+  def fib(start: Int, end: Int): Stream[Int] = Stream.cons(start, fib(end, start + end)) 
+  
   override def toString(): String = if(isEmpty()) "Stream()" else "Stream("+head()+", ?)"
 }
 
